@@ -3,22 +3,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#f8f9fa">
+    android:background="@color/background_light">
 
     <!-- Header -->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="16dp"
-        android:background="#2c3e50"
+        android:background="@color/header_background"
         android:layout_marginBottom="8dp">
 
         <TextView
             android:id="@+id/btnBack"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="←"
-            android:textColor="#ffffff"
+            android:text="@string/back"
+            android:textColor="@color/header_text"
             android:textSize="24sp"
             android:padding="8dp"
             android:background="?android:selectableItemBackgroundBorderless"
@@ -30,9 +30,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:textColor="#ffffff"
+            android:textColor="@color/header_text"
             android:textSize="18sp"
-            android:text="العرض التفاعلي"/>
+            android:text="@string/quiz_display"/>
 
     </RelativeLayout>
 
@@ -48,7 +48,7 @@
             android:layout_width="180dp"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:background="#ffffff"
+            android:background="@color/card_background_light"
             android:elevation="2dp"
             android:layout_marginEnd="8dp"
             android:padding="8dp"/>
@@ -65,7 +65,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:background="#ffffff"
+                android:background="@color/card_background_light"
                 android:elevation="2dp"
                 android:padding="12dp"
                 android:layout_marginBottom="8dp"
@@ -130,15 +130,15 @@
                     android:gravity="center"
                     android:text="0"
                     android:textSize="16sp"
-                    android:background="#f58a38"
-                    android:textColor="#ffffff"/>
+                    android:background="@color/primary"
+                    android:textColor="@color/white"/>
             </LinearLayout>
 
             <!-- Questions Grid -->
             <ScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="#ffffff"
+                android:background="@color/card_background_light"
                 android:elevation="2dp"
                 android:padding="8dp">
 

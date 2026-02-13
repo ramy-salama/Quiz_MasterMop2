@@ -1,5 +1,5 @@
 package com.example.quiz_mastermob.adapters;
-import com.example.quiz_mastermob.models.QuestionModel;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.quiz_mastermob.R;
 import com.example.quiz_mastermob.models.QuestionModel;
 import org.json.JSONArray;
+import org.json.JSONException;
 import java.util.List;
 
 public class QuestionsAdapter extends RecyclerView.Adapter<QuestionsAdapter.ViewHolder> {
@@ -51,7 +52,8 @@ public class QuestionsAdapter extends RecyclerView.Adapter<QuestionsAdapter.View
         String answerText = "";
         switch (question.getType()) {
             case "essay":
-                answerText = "الإجابة: " + (question.getAnswer() != null ? question.getAnswer() : "");
+                answerText = holder.itemView.getContext().getString(R.string.answer_prefix) + " " + 
+                        (question.getAnswer() != null ? question.getAnswer() : "");
                 break;
 
             case "mcq":
@@ -60,27 +62,44 @@ public class QuestionsAdapter extends RecyclerView.Adapter<QuestionsAdapter.View
                     int answerIndex = 0;
                     try {
                         answerIndex = Integer.parseInt(question.getAnswer()) - 1;
-                    } catch (Exception e) {}
+                    } catch (NumberFormatException e) {
+                        answerIndex = 0;
+                    }
 
                     String[] letters = {"أ", "ب", "ج", "د"};
                     if (answerIndex >= 0 && answerIndex < options.length()) {
-                        answerText = "الإجابة: " + letters[answerIndex] + " - " + options.getString(answerIndex);
+                        answerText = holder.itemView.getContext().getString(R.string.answer_prefix) + " " + 
+                                letters[answerIndex] + " - " + options.getString(answerIndex);
                     }
-                } catch (Exception e) {
-                    answerText = "الإجابة: " + question.getAnswer();
+                } catch (JSONException e) {
+                    answerText = holder.itemView.getContext().getString(R.string.answer_prefix) + " " + 
+                            (question.getAnswer() != null ? question.getAnswer() : "");
                 }
                 break;
 
             case "truefalse":
-                answerText = question.getAnswer().equals("true") ? "الإجابة: صح ✓" : "الإجابة: خطأ ✗";
+                answerText = holder.itemView.getContext().getString(R.string.answer_prefix) + " " +
+                        (question.getAnswer().equals("true") ? 
+                         holder.itemView.getContext().getString(R.string.true_answer) : 
+                         holder.itemView.getContext().getString(R.string.false_answer));
                 break;
         }
 
         holder.tvAnswer.setText(answerText);
 
         // Type badge
-        String typeText = question.getType().equals("essay") ? "مقالي" :
-                question.getType().equals("mcq") ? "اختياري" : "صح/خطأ";
+        String typeText = "";
+        switch (question.getType()) {
+            case "essay":
+                typeText = holder.itemView.getContext().getString(R.string.essay);
+                break;
+            case "mcq":
+                typeText = holder.itemView.getContext().getString(R.string.mcq);
+                break;
+            case "truefalse":
+                typeText = holder.itemView.getContext().getString(R.string.truefalse);
+                break;
+        }
         holder.tvType.setText(typeText);
 
         holder.btnEdit.setOnClickListener(v -> onEditClickListener.onEditClick(question));

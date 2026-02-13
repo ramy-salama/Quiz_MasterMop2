@@ -18,6 +18,7 @@ import com.example.quiz_mastermob.database.DatabaseHelper;
 import com.example.quiz_mastermob.models.QuestionModel;
 import com.example.quiz_mastermob.models.UnitModel;
 import org.json.JSONArray;
+import org.json.JSONException;
 import java.util.List;
 
 public class QuestionsActivity extends AppCompatActivity {
@@ -79,9 +80,9 @@ public class QuestionsActivity extends AppCompatActivity {
     }
 
     private void setupTabs() {
-        tabLayout.addTab(tabLayout.newTab().setText("مقالي"));
-        tabLayout.addTab(tabLayout.newTab().setText("اختياري"));
-        tabLayout.addTab(tabLayout.newTab().setText("صح/خطأ"));
+        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.essay)));
+        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.mcq)));
+        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.truefalse)));
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -93,7 +94,8 @@ public class QuestionsActivity extends AppCompatActivity {
                         case 2: selectQuestionType("truefalse"); break;
                     }
                 } else {
-                    Toast.makeText(QuestionsActivity.this, "اختر وحدة أولاً", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(QuestionsActivity.this, 
+                        getString(R.string.select_unit_first), Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -109,9 +111,9 @@ public class QuestionsActivity extends AppCompatActivity {
         btnAddUnit.setOnClickListener(v -> showUnitDialog(false, null));
         btnAddQuestion.setOnClickListener(v -> {
             if (currentUnitId == -1) {
-                Toast.makeText(this, "اختر وحدة أولاً", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.select_unit_first), Toast.LENGTH_SHORT).show();
             } else if (currentQuestionType.isEmpty()) {
-                Toast.makeText(this, "اختر نوع السؤال أولاً", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.select_question_type_first), Toast.LENGTH_SHORT).show();
             } else {
                 showQuestionDialog(false, null);
             }
@@ -127,7 +129,7 @@ public class QuestionsActivity extends AppCompatActivity {
     private void onUnitClick(UnitModel unit) {
         currentUnitId = unit.getId();
         currentUnitName = unit.getName();
-        tvCurrentType.setText("اختر نوع السؤال");
+        tvCurrentType.setText(getString(R.string.select_question_type));
         layoutQuestionTypes.setVisibility(View.VISIBLE);
         loadQuestionStats();
     }
@@ -138,9 +140,9 @@ public class QuestionsActivity extends AppCompatActivity {
 
     private void onDeleteUnit(UnitModel unit) {
         new MaterialAlertDialogBuilder(this)
-                .setTitle("حذف الوحدة")
-                .setMessage("هل أنت متأكد من حذف هذه الوحدة وجميع أسئلتها؟")
-                .setPositiveButton("نعم", (dialog, which) -> {
+                .setTitle(getString(R.string.delete_unit))
+                .setMessage(getString(R.string.confirm_delete_unit))
+                .setPositiveButton(getString(R.string.yes), (dialog, which) -> {
                     dbHelper.deleteUnit(unit.getId());
                     if (currentUnitId == unit.getId()) {
                         currentUnitId = -1;
@@ -149,20 +151,25 @@ public class QuestionsActivity extends AppCompatActivity {
                     }
                     loadUnits();
                 })
-                .setNegativeButton("لا", null)
+                .setNegativeButton(getString(R.string.no), null)
                 .show();
     }
 
     private void loadQuestionStats() {
         int[] stats = dbHelper.getQuestionStats(classId, currentUnitId);
-        tabLayout.getTabAt(0).setText("مقالي (" + stats[0] + ")");
-        tabLayout.getTabAt(1).setText("اختياري (" + stats[1] + ")");
-        tabLayout.getTabAt(2).setText("صح/خطأ (" + stats[2] + ")");
+        tabLayout.getTabAt(0).setText(getString(R.string.essay) + " (" + stats[0] + ")");
+        tabLayout.getTabAt(1).setText(getString(R.string.mcq) + " (" + stats[1] + ")");
+        tabLayout.getTabAt(2).setText(getString(R.string.truefalse) + " (" + stats[2] + ")");
     }
 
     private void selectQuestionType(String type) {
         currentQuestionType = type;
-        String typeName = type.equals("essay") ? "مقالي" : type.equals("mcq") ? "اختياري" : "صح/خطأ";
+        String typeName = "";
+        switch (type) {
+            case "essay": typeName = getString(R.string.essay); break;
+            case "mcq": typeName = getString(R.string.mcq); break;
+            case "truefalse": typeName = getString(R.string.truefalse); break;
+        }
         tvCurrentType.setText(typeName);
         loadQuestions();
     }
@@ -179,14 +186,14 @@ public class QuestionsActivity extends AppCompatActivity {
 
     private void onDeleteQuestion(QuestionModel question) {
         new MaterialAlertDialogBuilder(this)
-                .setTitle("حذف السؤال")
-                .setMessage("هل أنت متأكد من حذف هذا السؤال؟")
-                .setPositiveButton("نعم", (dialog, which) -> {
+                .setTitle(getString(R.string.delete_question))
+                .setMessage(getString(R.string.confirm_delete_question))
+                .setPositiveButton(getString(R.string.yes), (dialog, which) -> {
                     dbHelper.deleteQuestion(question.getId());
                     loadQuestions();
                     loadQuestionStats();
                 })
-                .setNegativeButton("لا", null)
+                .setNegativeButton(getString(R.string.no), null)
                 .show();
     }
 
@@ -198,30 +205,31 @@ public class QuestionsActivity extends AppCompatActivity {
         TextView etName = dialogView.findViewById(R.id.etUnitName);
 
         if (isEdit && unit != null) {
-            tvTitle.setText("تعديل الوحدة");
+            tvTitle.setText(getString(R.string.edit_unit));
             etName.setText(unit.getName());
         } else {
-            tvTitle.setText("إضافة وحدة");
+            tvTitle.setText(getString(R.string.add_unit));
         }
 
         builder.setView(dialogView)
-                .setPositiveButton(isEdit ? "تحديث" : "إضافة", (dialog, which) -> {
+                .setPositiveButton(isEdit ? getString(R.string.update) : getString(R.string.add), 
+                    (dialog, which) -> {
                     String name = etName.getText().toString().trim();
                     if (name.isEmpty()) {
-                        Toast.makeText(this, "الرجاء إدخال اسم الوحدة", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, getString(R.string.field_required), Toast.LENGTH_SHORT).show();
                         return;
                     }
 
                     if (isEdit && unit != null) {
                         dbHelper.updateUnit(unit.getId(), name);
-                        Toast.makeText(this, "تم التحديث", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, getString(R.string.updated_successfully), Toast.LENGTH_SHORT).show();
                     } else {
                         dbHelper.addUnit(classId, name);
-                        Toast.makeText(this, "تمت الإضافة", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, getString(R.string.added_successfully), Toast.LENGTH_SHORT).show();
                     }
                     loadUnits();
                 })
-                .setNegativeButton("إلغاء", null)
+                .setNegativeButton(getString(R.string.cancel), null)
                 .show();
     }
 
@@ -243,7 +251,7 @@ public class QuestionsActivity extends AppCompatActivity {
         TextView etQuestion = dialogView.findViewById(R.id.etQuestion);
         TextView etAnswer = dialogView.findViewById(R.id.etAnswer);
 
-        tvTitle.setText(isEdit ? "تعديل سؤال مقالي" : "إضافة سؤال مقالي");
+        tvTitle.setText(isEdit ? getString(R.string.edit_essay) : getString(R.string.add_essay));
 
         if (isEdit && question != null) {
             etQuestion.setText(question.getText());
@@ -251,12 +259,13 @@ public class QuestionsActivity extends AppCompatActivity {
         }
 
         builder.setView(dialogView)
-                .setPositiveButton(isEdit ? "تحديث" : "إضافة", (dialog, which) -> {
+                .setPositiveButton(isEdit ? getString(R.string.update) : getString(R.string.add), 
+                    (dialog, which) -> {
                     String qText = etQuestion.getText().toString().trim();
                     String answer = etAnswer.getText().toString().trim();
 
                     if (qText.isEmpty()) {
-                        Toast.makeText(this, "الرجاء إدخال نص السؤال", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, getString(R.string.field_required), Toast.LENGTH_SHORT).show();
                         return;
                     }
 
@@ -268,7 +277,7 @@ public class QuestionsActivity extends AppCompatActivity {
                     loadQuestions();
                     loadQuestionStats();
                 })
-                .setNegativeButton("إلغاء", null)
+                .setNegativeButton(getString(R.string.cancel), null)
                 .show();
     }
 
@@ -283,7 +292,7 @@ public class QuestionsActivity extends AppCompatActivity {
         TextView etOption3 = dialogView.findViewById(R.id.etOption3);
         TextView etOption4 = dialogView.findViewById(R.id.etOption4);
 
-        tvTitle.setText(isEdit ? "تعديل سؤال اختياري" : "إضافة سؤال اختياري");
+        tvTitle.setText(isEdit ? getString(R.string.edit_mcq) : getString(R.string.add_mcq));
 
         if (isEdit && question != null) {
             etQuestion.setText(question.getText());
@@ -293,11 +302,14 @@ public class QuestionsActivity extends AppCompatActivity {
                 etOption2.setText(options.optString(1));
                 etOption3.setText(options.optString(2));
                 etOption4.setText(options.optString(3));
-            } catch (Exception e) {}
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
 
         builder.setView(dialogView)
-                .setPositiveButton(isEdit ? "تحديث" : "إضافة", (dialog, which) -> {
+                .setPositiveButton(isEdit ? getString(R.string.update) : getString(R.string.add), 
+                    (dialog, which) -> {
                     String qText = etQuestion.getText().toString().trim();
                     String opt1 = etOption1.getText().toString().trim();
                     String opt2 = etOption2.getText().toString().trim();
@@ -305,7 +317,7 @@ public class QuestionsActivity extends AppCompatActivity {
                     String opt4 = etOption4.getText().toString().trim();
 
                     if (qText.isEmpty() || opt1.isEmpty() || opt2.isEmpty() || opt3.isEmpty() || opt4.isEmpty()) {
-                        Toast.makeText(this, "الرجاء ملء جميع الحقول", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, getString(R.string.fill_all_fields), Toast.LENGTH_SHORT).show();
                         return;
                     }
 
@@ -323,7 +335,7 @@ public class QuestionsActivity extends AppCompatActivity {
                     loadQuestions();
                     loadQuestionStats();
                 })
-                .setNegativeButton("إلغاء", null)
+                .setNegativeButton(getString(R.string.cancel), null)
                 .show();
     }
 
@@ -336,7 +348,7 @@ public class QuestionsActivity extends AppCompatActivity {
         View btnTrue = dialogView.findViewById(R.id.btnTrue);
         View btnFalse = dialogView.findViewById(R.id.btnFalse);
 
-        tvTitle.setText(isEdit ? "تعديل سؤال صح/خطأ" : "إضافة سؤال صح/خطأ");
+        tvTitle.setText(isEdit ? getString(R.string.edit_truefalse) : getString(R.string.add_truefalse));
 
         final String[] selectedAnswer = {"true"};
 
@@ -365,11 +377,12 @@ public class QuestionsActivity extends AppCompatActivity {
         });
 
         builder.setView(dialogView)
-                .setPositiveButton(isEdit ? "تحديث" : "إضافة", (dialog, which) -> {
+                .setPositiveButton(isEdit ? getString(R.string.update) : getString(R.string.add), 
+                    (dialog, which) -> {
                     String qText = etQuestion.getText().toString().trim();
 
                     if (qText.isEmpty()) {
-                        Toast.makeText(this, "الرجاء إدخال نص السؤال", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, getString(R.string.field_required), Toast.LENGTH_SHORT).show();
                         return;
                     }
 
@@ -381,7 +394,7 @@ public class QuestionsActivity extends AppCompatActivity {
                     loadQuestions();
                     loadQuestionStats();
                 })
-                .setNegativeButton("إلغاء", null)
+                .setNegativeButton(getString(R.string.cancel), null)
                 .show();
     }
 }

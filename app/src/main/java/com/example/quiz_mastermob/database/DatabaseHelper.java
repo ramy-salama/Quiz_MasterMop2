@@ -1,4 +1,4 @@
-package com.example.quiz_mastermob;
+package com.example.quiz_mastermob.database;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -19,12 +19,49 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
 
     // أسماء الجداول
-    private static final String TABLE_CLASSES = "classes";
-    private static final String TABLE_STUDENTS = "students";
-    private static final String TABLE_UNITS = "units";
-    private static final String TABLE_QUESTIONS = "questions";
-    private static final String TABLE_TEAMS = "teams";
-    private static final String TABLE_TEAM_MEMBERS = "team_members";
+    public static final String TABLE_CLASSES = "classes";
+    public static final String TABLE_STUDENTS = "students";
+    public static final String TABLE_UNITS = "units";
+    public static final String TABLE_QUESTIONS = "questions";
+    public static final String TABLE_TEAMS = "teams";
+    public static final String TABLE_TEAM_MEMBERS = "team_members";
+
+    // أسماء الأعمدة لجدول classes
+    public static final String COLUMN_CLASS_ID = "id";
+    public static final String COLUMN_CLASS_NAME = "name";
+    public static final String COLUMN_CLASS_DESCRIPTION = "description";
+    public static final String COLUMN_CLASS_CREATED_AT = "created_at";
+
+    // أسماء الأعمدة لجدول students
+    public static final String COLUMN_STUDENT_ID = "id";
+    public static final String COLUMN_STUDENT_CLASS_ID = "class_id";
+    public static final String COLUMN_STUDENT_NAME = "name";
+    public static final String COLUMN_STUDENT_ATTENDANCE = "attendance";
+    public static final String COLUMN_STUDENT_COMPLETED_8 = "completed_8";
+
+    // أسماء الأعمدة لجدول units
+    public static final String COLUMN_UNIT_ID = "id";
+    public static final String COLUMN_UNIT_CLASS_ID = "class_id";
+    public static final String COLUMN_UNIT_NAME = "name";
+    public static final String COLUMN_UNIT_CREATED_AT = "created_at";
+
+    // أسماء الأعمدة لجدول questions
+    public static final String COLUMN_QUESTION_ID = "id";
+    public static final String COLUMN_QUESTION_CLASS_ID = "class_id";
+    public static final String COLUMN_QUESTION_UNIT_ID = "unit_id";
+    public static final String COLUMN_QUESTION_TYPE = "type";
+    public static final String COLUMN_QUESTION_TEXT = "text";
+    public static final String COLUMN_QUESTION_ANSWER = "answer";
+    public static final String COLUMN_QUESTION_OPTIONS = "options";
+    public static final String COLUMN_QUESTION_CREATED_AT = "created_at";
+
+    // أسماء الأعمدة لجدول teams
+    public static final String COLUMN_TEAM_ID = "id";
+    public static final String COLUMN_TEAM_CLASS_ID = "class_id";
+    public static final String COLUMN_TEAM_NAME = "name";
+    public static final String COLUMN_TEAM_COLOR = "color";
+    public static final String COLUMN_TEAM_SCORE = "score";
+    public static final String COLUMN_TEAM_CREATED_AT = "created_at";
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -34,54 +71,54 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         // إنشاء جدول classes
         String CREATE_CLASSES_TABLE = "CREATE TABLE " + TABLE_CLASSES + "("
-                + "id INTEGER PRIMARY KEY AUTOINCREMENT,"
-                + "name TEXT NOT NULL,"
-                + "description TEXT,"
-                + "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP" + ")";
+                + COLUMN_CLASS_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+                + COLUMN_CLASS_NAME + " TEXT NOT NULL,"
+                + COLUMN_CLASS_DESCRIPTION + " TEXT,"
+                + COLUMN_CLASS_CREATED_AT + " TIMESTAMP DEFAULT CURRENT_TIMESTAMP" + ")";
         db.execSQL(CREATE_CLASSES_TABLE);
 
         // إنشاء جدول students
         String CREATE_STUDENTS_TABLE = "CREATE TABLE " + TABLE_STUDENTS + "("
-                + "id INTEGER PRIMARY KEY AUTOINCREMENT,"
-                + "class_id INTEGER,"
-                + "name TEXT NOT NULL,"
-                + "attendance INTEGER DEFAULT 0,"
-                + "completed_8 INTEGER DEFAULT 0,"
-                + "FOREIGN KEY(class_id) REFERENCES classes(id) ON DELETE CASCADE" + ")";
+                + COLUMN_STUDENT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+                + COLUMN_STUDENT_CLASS_ID + " INTEGER,"
+                + COLUMN_STUDENT_NAME + " TEXT NOT NULL,"
+                + COLUMN_STUDENT_ATTENDANCE + " INTEGER DEFAULT 0,"
+                + COLUMN_STUDENT_COMPLETED_8 + " INTEGER DEFAULT 0,"
+                + "FOREIGN KEY(" + COLUMN_STUDENT_CLASS_ID + ") REFERENCES " + TABLE_CLASSES + "(" + COLUMN_CLASS_ID + ") ON DELETE CASCADE" + ")";
         db.execSQL(CREATE_STUDENTS_TABLE);
 
         // إنشاء جدول units
         String CREATE_UNITS_TABLE = "CREATE TABLE " + TABLE_UNITS + "("
-                + "id INTEGER PRIMARY KEY AUTOINCREMENT,"
-                + "class_id INTEGER,"
-                + "name TEXT NOT NULL,"
-                + "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,"
-                + "FOREIGN KEY(class_id) REFERENCES classes(id) ON DELETE CASCADE" + ")";
+                + COLUMN_UNIT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+                + COLUMN_UNIT_CLASS_ID + " INTEGER,"
+                + COLUMN_UNIT_NAME + " TEXT NOT NULL,"
+                + COLUMN_UNIT_CREATED_AT + " TIMESTAMP DEFAULT CURRENT_TIMESTAMP,"
+                + "FOREIGN KEY(" + COLUMN_UNIT_CLASS_ID + ") REFERENCES " + TABLE_CLASSES + "(" + COLUMN_CLASS_ID + ") ON DELETE CASCADE" + ")";
         db.execSQL(CREATE_UNITS_TABLE);
 
         // إنشاء جدول questions
         String CREATE_QUESTIONS_TABLE = "CREATE TABLE " + TABLE_QUESTIONS + "("
-                + "id INTEGER PRIMARY KEY AUTOINCREMENT,"
-                + "class_id INTEGER,"
-                + "unit_id INTEGER,"
-                + "type TEXT CHECK(type IN ('essay','mcq','truefalse')),"
-                + "text TEXT NOT NULL,"
-                + "answer TEXT,"
-                + "options TEXT,"
-                + "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,"
-                + "FOREIGN KEY(class_id) REFERENCES classes(id) ON DELETE CASCADE,"
-                + "FOREIGN KEY(unit_id) REFERENCES units(id) ON DELETE CASCADE" + ")";
+                + COLUMN_QUESTION_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+                + COLUMN_QUESTION_CLASS_ID + " INTEGER,"
+                + COLUMN_QUESTION_UNIT_ID + " INTEGER,"
+                + COLUMN_QUESTION_TYPE + " TEXT CHECK(type IN ('essay','mcq','truefalse')),"
+                + COLUMN_QUESTION_TEXT + " TEXT NOT NULL,"
+                + COLUMN_QUESTION_ANSWER + " TEXT,"
+                + COLUMN_QUESTION_OPTIONS + " TEXT,"
+                + COLUMN_QUESTION_CREATED_AT + " TIMESTAMP DEFAULT CURRENT_TIMESTAMP,"
+                + "FOREIGN KEY(" + COLUMN_QUESTION_CLASS_ID + ") REFERENCES " + TABLE_CLASSES + "(" + COLUMN_CLASS_ID + ") ON DELETE CASCADE,"
+                + "FOREIGN KEY(" + COLUMN_QUESTION_UNIT_ID + ") REFERENCES " + TABLE_UNITS + "(" + COLUMN_UNIT_ID + ") ON DELETE CASCADE" + ")";
         db.execSQL(CREATE_QUESTIONS_TABLE);
 
         // إنشاء جدول teams
         String CREATE_TEAMS_TABLE = "CREATE TABLE " + TABLE_TEAMS + "("
-                + "id INTEGER PRIMARY KEY AUTOINCREMENT,"
-                + "class_id INTEGER,"
-                + "name TEXT NOT NULL,"
-                + "color TEXT DEFAULT '#4a90e2',"
-                + "score INTEGER DEFAULT 0,"
-                + "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,"
-                + "FOREIGN KEY(class_id) REFERENCES classes(id) ON DELETE CASCADE" + ")";
+                + COLUMN_TEAM_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+                + COLUMN_TEAM_CLASS_ID + " INTEGER,"
+                + COLUMN_TEAM_NAME + " TEXT NOT NULL,"
+                + COLUMN_TEAM_COLOR + " TEXT DEFAULT '#4a90e2',"
+                + COLUMN_TEAM_SCORE + " INTEGER DEFAULT 0,"
+                + COLUMN_TEAM_CREATED_AT + " TIMESTAMP DEFAULT CURRENT_TIMESTAMP,"
+                + "FOREIGN KEY(" + COLUMN_TEAM_CLASS_ID + ") REFERENCES " + TABLE_CLASSES + "(" + COLUMN_CLASS_ID + ") ON DELETE CASCADE" + ")";
         db.execSQL(CREATE_TEAMS_TABLE);
 
         // إنشاء جدول team_members
@@ -89,44 +126,43 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + "id INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + "team_id INTEGER,"
                 + "student_id INTEGER UNIQUE,"
-                + "FOREIGN KEY(team_id) REFERENCES teams(id) ON DELETE CASCADE,"
-                + "FOREIGN KEY(student_id) REFERENCES students(id) ON DELETE CASCADE" + ")";
+                + "FOREIGN KEY(team_id) REFERENCES " + TABLE_TEAMS + "(" + COLUMN_TEAM_ID + ") ON DELETE CASCADE,"
+                + "FOREIGN KEY(student_id) REFERENCES " + TABLE_STUDENTS + "(" + COLUMN_STUDENT_ID + ") ON DELETE CASCADE" + ")";
         db.execSQL(CREATE_TEAM_MEMBERS_TABLE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_TEAM_MEMBERS);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_TEAMS);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_QUESTIONS);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_UNITS);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_STUDENTS);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_CLASSES);
-        onCreate(db);
+        if (oldVersion < newVersion) {
+            // هنا هنضيف ALTER statements لكل جدول حسب الإصدار الجديد
+            // مثال: db.execSQL("ALTER TABLE " + TABLE_STUDENTS + " ADD COLUMN new_column INTEGER DEFAULT 0");
+
+            // حالياً مش بنضيف أعمدة جديدة، فنسيبها فاضية
+        }
     }
 
     // ========== دوال الصفوف ==========
     public long addClass(String name, String description) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put("name", name);
-        values.put("description", description);
+        values.put(COLUMN_CLASS_NAME, name);
+        values.put(COLUMN_CLASS_DESCRIPTION, description);
         return db.insert(TABLE_CLASSES, null, values);
     }
 
     public List<ClassModel> getAllClasses() {
         List<ClassModel> classList = new ArrayList<>();
-        String query = "SELECT * FROM " + TABLE_CLASSES + " ORDER BY created_at DESC";
+        String query = "SELECT * FROM " + TABLE_CLASSES + " ORDER BY " + COLUMN_CLASS_CREATED_AT + " DESC";
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(query, null);
 
         if (cursor.moveToFirst()) {
             do {
                 ClassModel classModel = new ClassModel(
-                        cursor.getInt(0),
-                        cursor.getString(1),
-                        cursor.getString(2),
-                        cursor.getString(3)
+                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_CLASS_ID)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_CLASS_NAME)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_CLASS_DESCRIPTION)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_CLASS_CREATED_AT))
                 );
                 classList.add(classModel);
             } while (cursor.moveToNext());
@@ -135,44 +171,61 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return classList;
     }
 
+    public ClassModel getClassById(int classId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(TABLE_CLASSES, null, COLUMN_CLASS_ID + " = ?",
+                new String[]{String.valueOf(classId)}, null, null, null);
+        ClassModel classModel = null;
+        if (cursor.moveToFirst()) {
+            classModel = new ClassModel(
+                    cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_CLASS_ID)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_CLASS_NAME)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_CLASS_DESCRIPTION)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_CLASS_CREATED_AT))
+            );
+        }
+        cursor.close();
+        return classModel;
+    }
+
     public int updateClass(int id, String name, String description) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put("name", name);
-        values.put("description", description);
-        return db.update(TABLE_CLASSES, values, "id = ?", new String[]{String.valueOf(id)});
+        values.put(COLUMN_CLASS_NAME, name);
+        values.put(COLUMN_CLASS_DESCRIPTION, description);
+        return db.update(TABLE_CLASSES, values, COLUMN_CLASS_ID + " = ?", new String[]{String.valueOf(id)});
     }
 
     public void deleteClass(int id) {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(TABLE_CLASSES, "id = ?", new String[]{String.valueOf(id)});
+        db.delete(TABLE_CLASSES, COLUMN_CLASS_ID + " = ?", new String[]{String.valueOf(id)});
     }
 
     // ========== دوال الطلاب ==========
     public long addStudent(int classId, String name) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put("class_id", classId);
-        values.put("name", name);
-        values.put("attendance", 0);
-        values.put("completed_8", 0);
+        values.put(COLUMN_STUDENT_CLASS_ID, classId);
+        values.put(COLUMN_STUDENT_NAME, name);
+        values.put(COLUMN_STUDENT_ATTENDANCE, 0);
+        values.put(COLUMN_STUDENT_COMPLETED_8, 0);
         return db.insert(TABLE_STUDENTS, null, values);
     }
 
     public List<StudentModel> getStudentsByClass(int classId) {
         List<StudentModel> studentList = new ArrayList<>();
-        String query = "SELECT * FROM " + TABLE_STUDENTS + " WHERE class_id = ? ORDER BY name";
+        String query = "SELECT * FROM " + TABLE_STUDENTS + " WHERE " + COLUMN_STUDENT_CLASS_ID + " = ? ORDER BY " + COLUMN_STUDENT_NAME;
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(classId)});
 
         if (cursor.moveToFirst()) {
             do {
                 StudentModel student = new StudentModel(
-                        cursor.getInt(0),
-                        cursor.getInt(1),
-                        cursor.getString(2),
-                        cursor.getInt(3),
-                        cursor.getInt(4)
+                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_STUDENT_ID)),
+                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_STUDENT_CLASS_ID)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_STUDENT_NAME)),
+                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_STUDENT_ATTENDANCE)),
+                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_STUDENT_COMPLETED_8))
                 );
                 studentList.add(student);
             } while (cursor.moveToNext());
@@ -184,31 +237,31 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public int updateStudent(int studentId, String name) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put("name", name);
-        return db.update(TABLE_STUDENTS, values, "id = ?", new String[]{String.valueOf(studentId)});
+        values.put(COLUMN_STUDENT_NAME, name);
+        return db.update(TABLE_STUDENTS, values, COLUMN_STUDENT_ID + " = ?", new String[]{String.valueOf(studentId)});
     }
 
     public void deleteStudent(int studentId) {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(TABLE_STUDENTS, "id = ?", new String[]{String.valueOf(studentId)});
+        db.delete(TABLE_STUDENTS, COLUMN_STUDENT_ID + " = ?", new String[]{String.valueOf(studentId)});
     }
 
     public int updateStudentAttendance(int studentId, int newAttendance) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put("attendance", newAttendance);
-        return db.update(TABLE_STUDENTS, values, "id = ?", new String[]{String.valueOf(studentId)});
+        values.put(COLUMN_STUDENT_ATTENDANCE, newAttendance);
+        return db.update(TABLE_STUDENTS, values, COLUMN_STUDENT_ID + " = ?", new String[]{String.valueOf(studentId)});
     }
 
     public void checkAndAddCompleted8(int studentId) {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.execSQL("UPDATE " + TABLE_STUDENTS + " SET completed_8 = completed_8 + 1 WHERE id = ? AND attendance = 8",
+        db.execSQL("UPDATE " + TABLE_STUDENTS + " SET " + COLUMN_STUDENT_COMPLETED_8 + " = " + COLUMN_STUDENT_COMPLETED_8 + " + 1 WHERE " + COLUMN_STUDENT_ID + " = ? AND " + COLUMN_STUDENT_ATTENDANCE + " = 8",
                 new String[]{String.valueOf(studentId)});
     }
 
     public void removeCompleted8(int studentId) {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.execSQL("UPDATE " + TABLE_STUDENTS + " SET completed_8 = CASE WHEN completed_8 > 0 THEN completed_8 - 1 ELSE 0 END WHERE id = ?",
+        db.execSQL("UPDATE " + TABLE_STUDENTS + " SET " + COLUMN_STUDENT_COMPLETED_8 + " = CASE WHEN " + COLUMN_STUDENT_COMPLETED_8 + " > 0 THEN " + COLUMN_STUDENT_COMPLETED_8 + " - 1 ELSE 0 END WHERE " + COLUMN_STUDENT_ID + " = ?",
                 new String[]{String.valueOf(studentId)});
     }
 
@@ -216,26 +269,26 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public long addUnit(int classId, String name) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put("class_id", classId);
-        values.put("name", name);
+        values.put(COLUMN_UNIT_CLASS_ID, classId);
+        values.put(COLUMN_UNIT_NAME, name);
         return db.insert(TABLE_UNITS, null, values);
     }
 
     public List<UnitModel> getUnitsByClass(int classId) {
         List<UnitModel> unitList = new ArrayList<>();
-        String query = "SELECT u.*, (SELECT COUNT(*) FROM " + TABLE_QUESTIONS + " WHERE unit_id = u.id) as question_count "
-                + "FROM " + TABLE_UNITS + " u WHERE u.class_id = ? ORDER BY u.created_at";
+        String query = "SELECT u.*, (SELECT COUNT(*) FROM " + TABLE_QUESTIONS + " WHERE " + COLUMN_QUESTION_UNIT_ID + " = u." + COLUMN_UNIT_ID + ") as question_count "
+                + "FROM " + TABLE_UNITS + " u WHERE u." + COLUMN_UNIT_CLASS_ID + " = ? ORDER BY u." + COLUMN_UNIT_CREATED_AT;
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(classId)});
 
         if (cursor.moveToFirst()) {
             do {
                 UnitModel unit = new UnitModel(
-                        cursor.getInt(0),
-                        cursor.getInt(1),
-                        cursor.getString(2),
-                        cursor.getString(3),
-                        cursor.getInt(4)
+                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_UNIT_ID)),
+                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_UNIT_CLASS_ID)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_UNIT_NAME)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_UNIT_CREATED_AT)),
+                        cursor.getInt(cursor.getColumnIndexOrThrow("question_count"))
                 );
                 unitList.add(unit);
             } while (cursor.moveToNext());
@@ -247,45 +300,45 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public int updateUnit(int unitId, String name) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put("name", name);
-        return db.update(TABLE_UNITS, values, "id = ?", new String[]{String.valueOf(unitId)});
+        values.put(COLUMN_UNIT_NAME, name);
+        return db.update(TABLE_UNITS, values, COLUMN_UNIT_ID + " = ?", new String[]{String.valueOf(unitId)});
     }
 
     public void deleteUnit(int unitId) {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(TABLE_UNITS, "id = ?", new String[]{String.valueOf(unitId)});
+        db.delete(TABLE_UNITS, COLUMN_UNIT_ID + " = ?", new String[]{String.valueOf(unitId)});
     }
 
     // ========== دوال الأسئلة ==========
     public long addQuestion(int classId, int unitId, String type, String text, String answer, String options) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put("class_id", classId);
-        values.put("unit_id", unitId);
-        values.put("type", type);
-        values.put("text", text);
-        values.put("answer", answer);
-        values.put("options", options);
+        values.put(COLUMN_QUESTION_CLASS_ID, classId);
+        values.put(COLUMN_QUESTION_UNIT_ID, unitId);
+        values.put(COLUMN_QUESTION_TYPE, type);
+        values.put(COLUMN_QUESTION_TEXT, text);
+        values.put(COLUMN_QUESTION_ANSWER, answer);
+        values.put(COLUMN_QUESTION_OPTIONS, options);
         return db.insert(TABLE_QUESTIONS, null, values);
     }
 
     public List<QuestionModel> getQuestions(int classId, int unitId, String type) {
         List<QuestionModel> questionList = new ArrayList<>();
-        String query = "SELECT * FROM " + TABLE_QUESTIONS + " WHERE class_id = ? AND unit_id = ? AND type = ? ORDER BY created_at DESC";
+        String query = "SELECT * FROM " + TABLE_QUESTIONS + " WHERE " + COLUMN_QUESTION_CLASS_ID + " = ? AND " + COLUMN_QUESTION_UNIT_ID + " = ? AND " + COLUMN_QUESTION_TYPE + " = ? ORDER BY " + COLUMN_QUESTION_CREATED_AT + " DESC";
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(classId), String.valueOf(unitId), type});
 
         if (cursor.moveToFirst()) {
             do {
                 QuestionModel question = new QuestionModel(
-                        cursor.getInt(0),
-                        cursor.getInt(1),
-                        cursor.getInt(2),
-                        cursor.getString(3),
-                        cursor.getString(4),
-                        cursor.getString(5),
-                        cursor.getString(6),
-                        cursor.getString(7)
+                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_QUESTION_ID)),
+                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_QUESTION_CLASS_ID)),
+                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_QUESTION_UNIT_ID)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_QUESTION_TYPE)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_QUESTION_TEXT)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_QUESTION_ANSWER)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_QUESTION_OPTIONS)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_QUESTION_CREATED_AT))
                 );
                 questionList.add(question);
             } while (cursor.moveToNext());
@@ -296,18 +349,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public QuestionModel getQuestion(int questionId) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(TABLE_QUESTIONS, null, "id = ?", new String[]{String.valueOf(questionId)}, null, null, null);
+        Cursor cursor = db.query(TABLE_QUESTIONS, null, COLUMN_QUESTION_ID + " = ?", new String[]{String.valueOf(questionId)}, null, null, null);
         QuestionModel question = null;
         if (cursor.moveToFirst()) {
             question = new QuestionModel(
-                    cursor.getInt(0),
-                    cursor.getInt(1),
-                    cursor.getInt(2),
-                    cursor.getString(3),
-                    cursor.getString(4),
-                    cursor.getString(5),
-                    cursor.getString(6),
-                    cursor.getString(7)
+                    cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_QUESTION_ID)),
+                    cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_QUESTION_CLASS_ID)),
+                    cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_QUESTION_UNIT_ID)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_QUESTION_TYPE)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_QUESTION_TEXT)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_QUESTION_ANSWER)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_QUESTION_OPTIONS)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_QUESTION_CREATED_AT))
             );
         }
         cursor.close();
@@ -317,20 +370,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public int updateQuestion(int questionId, String text, String answer, String options) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put("text", text);
-        values.put("answer", answer);
-        values.put("options", options);
-        return db.update(TABLE_QUESTIONS, values, "id = ?", new String[]{String.valueOf(questionId)});
+        values.put(COLUMN_QUESTION_TEXT, text);
+        values.put(COLUMN_QUESTION_ANSWER, answer);
+        values.put(COLUMN_QUESTION_OPTIONS, options);
+        return db.update(TABLE_QUESTIONS, values, COLUMN_QUESTION_ID + " = ?", new String[]{String.valueOf(questionId)});
     }
 
     public void deleteQuestion(int questionId) {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(TABLE_QUESTIONS, "id = ?", new String[]{String.valueOf(questionId)});
+        db.delete(TABLE_QUESTIONS, COLUMN_QUESTION_ID + " = ?", new String[]{String.valueOf(questionId)});
     }
 
     public int[] getQuestionStats(int classId, int unitId) {
         int[] stats = new int[3]; // [essay, mcq, truefalse]
-        String query = "SELECT type, COUNT(*) FROM " + TABLE_QUESTIONS + " WHERE class_id = ? AND unit_id = ? GROUP BY type";
+        String query = "SELECT " + COLUMN_QUESTION_TYPE + ", COUNT(*) FROM " + TABLE_QUESTIONS + " WHERE " + COLUMN_QUESTION_CLASS_ID + " = ? AND " + COLUMN_QUESTION_UNIT_ID + " = ? GROUP BY " + COLUMN_QUESTION_TYPE;
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(classId), String.valueOf(unitId)});
 
@@ -353,31 +406,31 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public long addTeam(int classId, String name, String color) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put("class_id", classId);
-        values.put("name", name);
-        values.put("color", color);
-        values.put("score", 0);
+        values.put(COLUMN_TEAM_CLASS_ID, classId);
+        values.put(COLUMN_TEAM_NAME, name);
+        values.put(COLUMN_TEAM_COLOR, color);
+        values.put(COLUMN_TEAM_SCORE, 0);
         return db.insert(TABLE_TEAMS, null, values);
     }
 
     public List<TeamModel> getTeams(int classId) {
         List<TeamModel> teamList = new ArrayList<>();
         String query = "SELECT t.*, COUNT(tm.id) as member_count FROM " + TABLE_TEAMS + " t "
-                + "LEFT JOIN " + TABLE_TEAM_MEMBERS + " tm ON t.id = tm.team_id "
-                + "WHERE t.class_id = ? GROUP BY t.id ORDER BY t.created_at";
+                + "LEFT JOIN " + TABLE_TEAM_MEMBERS + " tm ON t." + COLUMN_TEAM_ID + " = tm.team_id "
+                + "WHERE t." + COLUMN_TEAM_CLASS_ID + " = ? GROUP BY t." + COLUMN_TEAM_ID + " ORDER BY t." + COLUMN_TEAM_CREATED_AT;
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(classId)});
 
         if (cursor.moveToFirst()) {
             do {
                 TeamModel team = new TeamModel(
-                        cursor.getInt(0),
-                        cursor.getInt(1),
-                        cursor.getString(2),
-                        cursor.getString(3),
-                        cursor.getInt(4),
-                        cursor.getString(5),
-                        cursor.getInt(6)
+                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_TEAM_ID)),
+                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_TEAM_CLASS_ID)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_TEAM_NAME)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_TEAM_COLOR)),
+                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_TEAM_SCORE)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_TEAM_CREATED_AT)),
+                        cursor.getInt(cursor.getColumnIndexOrThrow("member_count"))
                 );
                 teamList.add(team);
             } while (cursor.moveToNext());
@@ -389,15 +442,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public int updateTeam(int teamId, String name, String color) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put("name", name);
-        values.put("color", color);
-        return db.update(TABLE_TEAMS, values, "id = ?", new String[]{String.valueOf(teamId)});
+        values.put(COLUMN_TEAM_NAME, name);
+        values.put(COLUMN_TEAM_COLOR, color);
+        return db.update(TABLE_TEAMS, values, COLUMN_TEAM_ID + " = ?", new String[]{String.valueOf(teamId)});
     }
 
     public void deleteTeam(int teamId) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_TEAM_MEMBERS, "team_id = ?", new String[]{String.valueOf(teamId)});
-        db.delete(TABLE_TEAMS, "id = ?", new String[]{String.valueOf(teamId)});
+        db.delete(TABLE_TEAMS, COLUMN_TEAM_ID + " = ?", new String[]{String.valueOf(teamId)});
     }
 
     public long addTeamMember(int teamId, int studentId) {
@@ -417,19 +470,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public List<StudentModel> getTeamMembers(int teamId) {
         List<StudentModel> memberList = new ArrayList<>();
         String query = "SELECT s.* FROM " + TABLE_STUDENTS + " s "
-                + "JOIN " + TABLE_TEAM_MEMBERS + " tm ON s.id = tm.student_id "
-                + "WHERE tm.team_id = ? ORDER BY s.name";
+                + "JOIN " + TABLE_TEAM_MEMBERS + " tm ON s." + COLUMN_STUDENT_ID + " = tm.student_id "
+                + "WHERE tm.team_id = ? ORDER BY s." + COLUMN_STUDENT_NAME;
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(teamId)});
 
         if (cursor.moveToFirst()) {
             do {
                 StudentModel student = new StudentModel(
-                        cursor.getInt(0),
-                        cursor.getInt(1),
-                        cursor.getString(2),
-                        cursor.getInt(3),
-                        cursor.getInt(4)
+                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_STUDENT_ID)),
+                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_STUDENT_CLASS_ID)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_STUDENT_NAME)),
+                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_STUDENT_ATTENDANCE)),
+                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_STUDENT_COMPLETED_8))
                 );
                 memberList.add(student);
             } while (cursor.moveToNext());
@@ -441,21 +494,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public List<StudentModel> getAvailableStudents(int classId) {
         List<StudentModel> studentList = new ArrayList<>();
         String query = "SELECT s.* FROM " + TABLE_STUDENTS + " s "
-                + "WHERE s.class_id = ? AND s.id NOT IN ("
-                + "SELECT student_id FROM " + TABLE_TEAM_MEMBERS + " tm "
-                + "JOIN " + TABLE_TEAMS + " t ON tm.team_id = t.id "
-                + "WHERE t.class_id = ?) ORDER BY s.name";
+                + "WHERE s." + COLUMN_STUDENT_CLASS_ID + " = ? AND s." + COLUMN_STUDENT_ID + " NOT IN ("
+                + "SELECT tm.student_id FROM " + TABLE_TEAM_MEMBERS + " tm "
+                + "JOIN " + TABLE_TEAMS + " t ON tm.team_id = t." + COLUMN_TEAM_ID + " "
+                + "WHERE t." + COLUMN_TEAM_CLASS_ID + " = ?) ORDER BY s." + COLUMN_STUDENT_NAME;
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(classId), String.valueOf(classId)});
 
         if (cursor.moveToFirst()) {
             do {
                 StudentModel student = new StudentModel(
-                        cursor.getInt(0),
-                        cursor.getInt(1),
-                        cursor.getString(2),
-                        cursor.getInt(3),
-                        cursor.getInt(4)
+                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_STUDENT_ID)),
+                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_STUDENT_CLASS_ID)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_STUDENT_NAME)),
+                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_STUDENT_ATTENDANCE)),
+                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_STUDENT_COMPLETED_8))
                 );
                 studentList.add(student);
             } while (cursor.moveToNext());
@@ -466,15 +519,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public int updateTeamScore(int teamId, int scoreChange) {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.execSQL("UPDATE " + TABLE_TEAMS + " SET score = score + ? WHERE id = ?",
-                new String[]{String.valueOf(scoreChange), String.valueOf(teamId)});
-        return scoreChange;
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_TEAM_SCORE, scoreChange);
+        return db.update(TABLE_TEAMS, values, COLUMN_TEAM_ID + " = ?", new String[]{String.valueOf(teamId)});
     }
 
     public void resetTeamScore(int teamId) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put("score", 0);
-        db.update(TABLE_TEAMS, values, "id = ?", new String[]{String.valueOf(teamId)});
+        values.put(COLUMN_TEAM_SCORE, 0);
+        db.update(TABLE_TEAMS, values, COLUMN_TEAM_ID + " = ?", new String[]{String.valueOf(teamId)});
     }
 }

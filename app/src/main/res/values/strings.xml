@@ -1,3 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Quiz_MasterMob</string>
+    <string name="app_name">Quiz Master</string>
+
+    <!-- عناوين عامة -->
+    <string name="students">الطلاب</string>
+    <string name="questions">الأسئلة</string>
+    <string name="quiz_display">العرض التفاعلي</string>
+    <string name="competitions">المسابقات</string>
+    <string name="back">←</string>
+    <string name="add">➕</string>
+    <string name="edit">✏️</string>
+    <string name="delete">🗑️</string>
+
+    <!-- عناوين الصفوف -->
+    <string name="classes_list">قائمة الصفوف</string>
+    <string name="add_class">➕ إضافة صف</string>
+    <string name="edit_class">تعديل الصف</string>
+    <string name="delete_class">حذف الصف</string>
+    <string name="class_name">اسم الصف</string>
+    <string name="class_description">وصف الصف (اختياري)</string>
+    <string name="no_description">لا يوجد وصف</string>
+    <string name="created_at">تم الإنشاء: %s</string>
+
+    <!-- عناوين الطلاب -->
+    <string name="students_list">قائمة الطلاب</string>
+    <string name="add_student">➕ إضافة طالب</string>
+    <string name="edit_student">تعديل الطالب</string>
+    <string name="delete_student">حذف الطالب</string>
+    <string name="student_name">اسم الطالب</string>
+    <string name="attendance">الحضور</string>
+    <string name="completed">مكتمل</string>
+    <string name="student">طالب</string>
+
+    <!-- عناوين الوحدات -->
+    <string name="units">الوحدات</string>
+    <string name="add_unit">➕ إضافة وحدة</string>
+    <string name="edit_unit">تعديل الوحدة</string>
+    <string name="delete_unit">حذف الوحدة</string>
+    <string name="unit_name">اسم الوحدة</string>
+
+    <!-- عناوين الأسئلة -->
+    <string name="questions_list">قائمة الأسئلة</string>
+    <string name="add_question">➕ إضافة سؤال</string>
+    <string name="edit_question">تعديل السؤال</string>
+    <string name="delete_question">حذف السؤال</string>
+    <string name="question_text">نص السؤال</string>
+    <string name="answer">الإجابة</string>
+    <string name="essay">مقالي</string>
+    <string name="mcq">اختياري</string>
+    <string name="truefalse">صح/خطأ</string>
+    <string name="reveal_answer">👁️ كشف الإجابة</string>
+
+    <string name="answer_prefix">الإجابة:</string>
+    <string name="true_answer">صح ✓</string>
+    <string name="false_answer">خطأ ✗</string>
+
+    <string name="yes">نعم</string>
+    <string name="no">لا</string>
+    <string name="update">تحديث</string>
+    <string name="cancel">إلغاء</string>
+    <string name="add">إضافة</string>
+    <string name="select_question_type">اختر نوع السؤال</string>
+    <string name="add_essay">إضافة سؤال مقالي</string>
+    <string name="edit_essay">تعديل سؤال مقالي</string>
+    <string name="add_mcq">إضافة سؤال اختياري</string>
+    <string name="edit_mcq">تعديل سؤال اختياري</string>
+    <string name="add_truefalse">إضافة سؤال صح/خطأ</string>
+    <string name="edit_truefalse">تعديل سؤال صح/خطأ</string>
+
+    <!-- رسائل تأكيد -->
+    <string name="confirm_delete">هل أنت متأكد من الحذف؟</string>
+    <string name="confirm_delete_class">هل أنت متأكد من حذف هذا الصف؟</string>
+    <string name="confirm_delete_student">هل أنت متأكد من حذف هذا الطالب؟</string>
+    <string name="confirm_delete_unit">هل أنت متأكد من حذف هذه الوحدة وجميع أسئلتها؟</string>
+    <string name="confirm_delete_question">هل أنت متأكد من حذف هذا السؤال؟</string>
+    <string name="confirm_remove_completed">هل أنت متأكد من حذف واحدة من الـ8 المكتملة؟</string>
+
+    <!-- رسائل نجاح -->
+    <string name="added_successfully">تمت الإضافة بنجاح</string>
+    <string name="updated_successfully">تم التحديث بنجاح</string>
+    <string name="deleted_successfully">تم الحذف بنجاح</string>
+
+    <!-- رسائل خطأ -->
+    <string name="error">حدث خطأ</string>
+    <string name="error_loading_data">خطأ في تحميل البيانات</string>
+    <string name="error_saving_data">خطأ في حفظ البيانات</string>
+    <string name="field_required">الرجاء إدخال البيانات المطلوبة</string>
+    <string name="select_unit_first">اختر وحدة أولاً</string>
+    <string name="select_question_type_first">اختر نوع السؤال أولاً</string>
+    <string name="fill_all_fields">الرجاء ملء جميع الحقول</string>
+
+    <!-- رسائل تحذير -->
+    <string name="no_units">لا توجد وحدات بعد</string>
+    <string name="no_students">لا يوجد طلاب</string>
+    <string name="no_questions">لا توجد أسئلة بعد</string>
+    <string name="no_classes">لا توجد صفوف بعد</string>
+
+    <!-- أيقونات -->
+    <string name="icon_students">👥</string>
+    <string name="icon_questions">❓</string>
+    <string name="icon_quiz">▶️</string>
+    <string name="icon_competitions">🏆</string>
+    <string name="icon_units">📚</string>
+    <string name="icon_dark_mode">🌙</string>
+    <string name="icon_light_mode">☀️</string>
+
 </resources>

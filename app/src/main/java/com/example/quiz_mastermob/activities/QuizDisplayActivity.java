@@ -5,15 +5,16 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.widget.GridLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
 import com.example.quiz_mastermob.R;
 import com.example.quiz_mastermob.database.DatabaseHelper;
 import com.example.quiz_mastermob.models.QuestionModel;
 import com.example.quiz_mastermob.models.UnitModel;
 import org.json.JSONArray;
+import org.json.JSONException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -62,6 +63,15 @@ public class QuizDisplayActivity extends AppCompatActivity {
         dbHelper = new DatabaseHelper(this);
         initViews();
         loadUnits();
+    }
+
+    @Override
+    protected void onDestroy() {
+        // إيقاف المؤقت لمنع تسرب الذاكرة
+        if (timerHandler != null) {
+            timerHandler.removeCallbacks(timerRunnable);
+        }
+        super.onDestroy();
     }
 
     private void initViews() {
@@ -197,13 +207,15 @@ public class QuizDisplayActivity extends AppCompatActivity {
                     int answerIndex = 0;
                     try {
                         answerIndex = Integer.parseInt(question.getAnswer()) - 1;
-                    } catch (Exception e) {}
+                    } catch (NumberFormatException e) {
+                        answerIndex = 0;
+                    }
 
                     String[] letters = {"أ", "ب", "ج", "د"};
                     if (answerIndex >= 0 && answerIndex < options.length()) {
                         answer = letters[answerIndex] + " - " + options.getString(answerIndex);
                     }
-                } catch (Exception e) {
+                } catch (JSONException e) {
                     answer = question.getAnswer() != null ? question.getAnswer() : "";
                 }
             } else {

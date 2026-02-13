@@ -25,7 +25,6 @@ public class ClassDetailsActivity extends AppCompatActivity {
     public static void start(AppCompatActivity activity, ClassModel classModel) {
         Intent intent = new Intent(activity, ClassDetailsActivity.class);
         intent.putExtra("class_id", classModel.getId());
-        intent.putExtra("class_name", classModel.getName());
         activity.startActivity(intent);
     }
 
@@ -43,8 +42,14 @@ public class ClassDetailsActivity extends AppCompatActivity {
 
     private void getClassData() {
         int classId = getIntent().getIntExtra("class_id", -1);
-        String className = getIntent().getStringExtra("class_name");
-        classModel = new ClassModel(classId, className, "", "");
+
+        // جلب كائن ClassModel كامل من قاعدة البيانات
+        classModel = dbHelper.getClassById(classId);
+
+        if (classModel == null) {
+            Toast.makeText(this, "خطأ في تحميل بيانات الصف", Toast.LENGTH_SHORT).show();
+            finish();
+        }
     }
 
     private void initViews() {
@@ -62,12 +67,16 @@ public class ClassDetailsActivity extends AppCompatActivity {
         cardQuizDisplay = findViewById(R.id.cardQuizDisplay);
         cardCompetitions = findViewById(R.id.cardCompetitions);
 
-        tvClassName.setText(classModel.getName());
+        if (classModel != null) {
+            tvClassName.setText(classModel.getName());
+        }
 
         findViewById(R.id.btnBack).setOnClickListener(v -> finish());
     }
 
     private void setupListeners() {
+        if (classModel == null) return;
+
         cardStudents.setOnClickListener(v ->
                 StudentsActivity.start(this, classModel.getId(), classModel.getName()));
 
@@ -82,6 +91,8 @@ public class ClassDetailsActivity extends AppCompatActivity {
     }
 
     private void loadStats() {
+        if (classModel == null) return;
+
         // Student stats
         List<StudentModel> students = dbHelper.getStudentsByClass(classModel.getId());
         int totalStudents = students.size();
